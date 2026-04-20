@@ -4,6 +4,11 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+import os
+
+# Ruta absoluta a la carpeta data/
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, 'data')
 
 class Recommender:
     def __init__(self):
@@ -19,8 +24,8 @@ class Recommender:
     
     def train(self):
         # Carga datos y entrena el modelo
-        self.movies = pd.read_csv('../data/movies_clean.csv')
-        self.ratings = pd.read_csv('../data/ratings_clean.csv')
+        self.movies = pd.read_csv(os.path.join(DATA_DIR, 'movies_clean.csv'))
+        self.ratings = pd.read_csv(os.path.join(DATA_DIR, 'ratings_clean.csv'))
 
         # Paso 2 - Content-based: preparar géneros
         self.movies['genres_clean'] = self.movies['genres'].str.replace('|', ' ', regex=False)
@@ -55,7 +60,7 @@ class Recommender:
         matches = self.indices[self.indices.index.str.lower().str.contains(title.lower())]
         
         if len(matches) == 0:
-            return "No se encontró ninguna película con ese título"
+            return None
         
         # Paso 2 - Tomamos el primer resultado
         """
@@ -79,6 +84,11 @@ class Recommender:
     
 
     def get_collaborative_recommendations(self, user_id, n=10):
+
+        # Validamos que el usuario existe
+        if user_id not in self.user_movie_matrix.index:
+            return None  # ← señal de que no existe
+
         # Paso 1 - Índice del usuario en la matriz
         user_idx = list(self.user_movie_matrix.index).index(user_id)
         
