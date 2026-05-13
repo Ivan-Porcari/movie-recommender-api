@@ -39,6 +39,10 @@ uvicorn app.main:app --reload
 
 - [x] Project setup & FastAPI structure
 - [x] Data exploration (MovieLens dataset)
-- [ ] Content-based filtering model
-- [ ] Collaborative filtering model
-- [ ] Recommendation endpoints
+- [x] Content-based filtering model
+- [x] Collaborative filtering model
+- [x] Recommendation endpoints
+
+## 🌐 Live Demo
+API available at: https://movie-recommender-api-naao.onrender.com/docs
+
